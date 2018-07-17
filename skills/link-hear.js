@@ -69,21 +69,23 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links (shared by user <@(.*)>|on ((this channel)|(channel <#(.*)\|.*>)))?( (from )?this (week|month|day))?/,
+    /links (shared by <@(.*)>|on ((this channel)|(channel <#(.*)\|.*>)))?( (from )?this (week|month|day))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
+      console.log(message.match)
       let options = {}
       let answer = ``
       if (message.match[2]) {
-        options = {userId: message.match[2]}
-        answer = ` by <@${message.match[2]}>`
+        options.userId = message.match[2]
+        answer += ` by <@${message.match[2]}>`
       }
       if (message.match[5]) {
-        options = {channelId: message.match[5]}
-        answer = ` in <#${message.match[5]}>`
-      } else if (message.match[4]) {
-        options = {channelId: message.channel}
-        answer = ` on this channel`
+        options.channelId = message.match[5]
+        answer += ` in <#${message.match[5]}>`
+      }
+      if (message.match[4]) {
+        options.channelId = message.channel
+        answer += ` on this channel`
       }
       controller.storage.links.find(options)
         .then(links => {
