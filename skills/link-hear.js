@@ -1,3 +1,9 @@
+const doneReaction = (bot, message) => {
+  
+}
+
+const addReactions = (bot, mess
+
 module.exports = controller => {
   controller.hears(
     /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>)/g,
