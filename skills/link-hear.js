@@ -45,7 +45,7 @@ module.exports = controller => {
       }
       if (message.match[8]) {
         options.channelId = message.match[8]
-        answer += ` in <#${message.match[8]}>`
+        answer += ` on <#${message.match[8]}>`
       }
       if (message.match[6] || !message.match[5]) {
         options.channelId = message.channel
@@ -72,7 +72,7 @@ module.exports = controller => {
               return result
             let tags = link.tags ? link.tags : 'No tags for this link'
             tags = tags.toString().replace(/,/g, ', ')
-            const line = `┌Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>\n└───Tags: ${tags}. Date: ${new Date(link.created * 1000)}`
+            const line = `┌Link ${link.link}. Added${answer}\n└───Tags: ${tags}. Date: ${new Date(link.created * 1000)}`
             return `${result}${line}\n`
           }, ``)
           bot.reply(message, parsedLinks)
