@@ -89,8 +89,8 @@ module.exports = controller => {
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
           const parsedLinks = links.reduce((result, link) => {
-            let 
-            const line = `Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>`
+            const tags = link.tags ? link.tags : 'No tags for this link'
+            const line = `┌Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>\n└───Tags: ${tags}`
             return `${result}${line}\n`
           }, ``)
           bot.reply(message, parsedLinks)
