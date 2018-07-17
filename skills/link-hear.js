@@ -69,7 +69,7 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links (shared by user <@(.*)>|from (channel)( <#(.*)\|.*>)?)?( (from)?)?/,
+    /links (shared by user <@(.*)>|from (channel)( <#(.*)\|.*>)?)?( (from )?this (week|month|day))?/,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       let options = {}
