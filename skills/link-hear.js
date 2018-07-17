@@ -9,7 +9,6 @@ module.exports = controller => {
       for (const m of message.match) {
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         const tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
-        console.log(tags)
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0].toLowerCase() + '>'
         const userId = message.user
@@ -56,8 +55,6 @@ module.exports = controller => {
     'direct_message,direct_mention,mention',
     (bot, message) => {
       let user = message.user
-      console.log(message.match[2])
-      console.log(user)
       if (message.match[2]) user = message.match[2]
       controller.storage.links.find({userId: user})
         .then(links => {
