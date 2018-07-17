@@ -5,16 +5,21 @@ module.exports = controller => {
     (bot, message) => {
       for (const m of message.match) {
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
-        console.log(mReg)
+        bot.api.channels.history({}, (err, result) => {
+          if (err) console.log(err)
+          console.log(result)
+        })
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0] + '>'
         const userId = message.user
         const channelId = message.channel
+        const createdAt = new Date()
         const linkInfo = {
           userId,
           channelId,
           id,
-          link
+          link,
+          createdAt
         }
         controller.storage.links.get(id)
           .then(link => {
