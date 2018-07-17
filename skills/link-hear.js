@@ -1,10 +1,10 @@
 module.exports = controller => {
   controller.hears(
-    /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))(\|\2)?>)/g,
+    /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>)/g,
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
       for (const m of message.match) {
-        const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))/.exec(m)
+        const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         console.log(mReg)
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0] + '>'
