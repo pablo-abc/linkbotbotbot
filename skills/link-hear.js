@@ -74,6 +74,7 @@ module.exports = controller => {
       console.log(message.match)
       let options = {}
       let answer = ``
+      let limit = null
       if (message.match[3]) {
         options.userId = message.match[3]
         answer += ` by <@${message.match[3]}>`
@@ -86,10 +87,25 @@ module.exports = controller => {
         options.channelId = message.channel
         answer += ` on this channel`
       }
+      if (message.match[11]) {
+        switch (message.match[11]) {
+          case 'day':
+            limit = new Date().getTime()/1000 - 86400
+            break
+          case 'week':
+            limit = new Date().getTime()/1000 - 604800
+            break
+          case 'month':
+            limit = new Date().getTime()/1000 - 2592000
+            break
+        }
+      }
       controller.storage.links.find(options)
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
           const parsedLinks = links.reduce((result, link) => {
+            if (limit && link.created < limit)
+              return result
             let tags = link.tags ? link.tags : 'No tags for this link'
             tags = tags.toString().replace(/,/g, ', ')
             const line = `┌Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>\n└───Tags: ${tags}`
