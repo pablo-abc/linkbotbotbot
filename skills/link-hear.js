@@ -36,6 +36,7 @@ module.exports = controller => {
     /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
+      console.log(message.match[11])
       let options = {}
       let answer = ``
       let limit = null
@@ -57,13 +58,14 @@ module.exports = controller => {
             limit = new Date().getTime()/1000 - 86400
             break
           case 'week':
+            bot.reply(message, 'Got here too')
             limit = new Date().getTime()/1000 - 604800
             break
           case 'month':
             limit = new Date().getTime()/1000 - 2592000
             break
         }
-        bot.reply(message, limit)
+        bot.reply(message, 'Got here')
       }
       controller.storage.links.find(options)
         .then(links => {
