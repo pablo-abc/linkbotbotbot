@@ -33,7 +33,7 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?/i,
+    /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?( about ([a-z][a-z0-9]*(, [a-z][a-z0-9]*)*( (and|or) [a-z][a-z0-9]*)?))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       let options = {}
