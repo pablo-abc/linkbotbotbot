@@ -67,6 +67,17 @@ module.exports = controller => {
       }
       if (message.match[12]) {
         tags = message.match[14].split(',').map(tag => tag.toString().trim())
+        if (message.match[16]) {
+          tags = tags.concat(message.match[18])
+          switch (message.match[17].toLowerCase()) {
+            case 'and':
+              options.$and = tags
+              break
+            case 'or':
+              options.$or = tags
+              break
+          }
+        }
         bot.reply(message, `The tags are ${tags}`)
       }
       controller.storage.links.find(options)
