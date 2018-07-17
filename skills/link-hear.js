@@ -69,7 +69,7 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links(( shared by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?/i,
+    /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       console.log(message.match)
