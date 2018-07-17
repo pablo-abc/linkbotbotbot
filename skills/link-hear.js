@@ -69,7 +69,33 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links show( (user <@(.*)>|(channel)( <#(.*)\
+    /links show (user <@(.*)>|(channel)( <#(.*)\|.*>)?)/,
+    'direct_message,direct_mention,mention',
+    (bot, message) => {
+      let options = {}
+      let answer = ``
+      if (message.match[2]) {
+        options = {userId: message.match[2]}
+        answer = ` by <@${message.match[2]}>`
+      }
+      if (message.match[5]) {
+        options = {channelId: message.match[5]}
+        answer = ` in <#${message.match[5]}>`
+      } else if (message.match[3]) {
+        options = {channelId: message.channel}
+        answer = ` in this channel`
+      }
+      controller.storage.links.find(options)
+        .then(links => {
+          if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
+          const parsedLinks = links.reduce((result, link) => {
+            let 
+            const line = `Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>`
+            return `${result}${line}\n`
+          }, ``)
+          bot.reply(message, parsedLinks)
+        })
+    })
 
   controller.hears(
     /links count( (user <@(.*)>|(channel)( <#(.*)\|.*>)?))?/,
