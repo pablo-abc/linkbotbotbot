@@ -36,7 +36,6 @@ module.exports = controller => {
     /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
-      console.log(message.match[11])
       let options = {}
       let answer = ``
       let limit = null
@@ -48,7 +47,7 @@ module.exports = controller => {
         options.channelId = message.match[8]
         answer += ` in <#${message.match[8]}>`
       }
-      if (message.match[6]) {
+      if (message.match[6] || !message.match[5]) {
         options.channelId = message.channel
         answer += ` on this channel`
       }
@@ -58,14 +57,12 @@ module.exports = controller => {
             limit = new Date().getTime()/1000 - 86400
             break
           case 'week':
-            bot.reply(message, 'Got here too')
             limit = new Date().getTime()/1000 - 604800
             break
           case 'month':
             limit = new Date().getTime()/1000 - 2592000
             break
         }
-        bot.reply(message, 'Got here')
       }
       controller.storage.links.find(options)
         .then(links => {
@@ -75,7 +72,7 @@ module.exports = controller => {
               return result
             let tags = link.tags ? link.tags : 'No tags for this link'
             tags = tags.toString().replace(/,/g, ', ')
-            const line = `┌Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>\n└───Tags: ${tags}`
+            const line = `┌Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>\n└───Tags: ${tags}. Date: ${new Date(link.created * 1000)}`
             return `${result}${line}\n`
           }, ``)
           bot.reply(message, parsedLinks)
