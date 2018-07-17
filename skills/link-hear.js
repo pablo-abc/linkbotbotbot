@@ -96,6 +96,17 @@ module.exports = controller => {
           bot.reply(message, parsedLinks)
         })
     })
+  
+  controller.hears(
+    /links delete/i,
+    'direct_message,direct_mention,mention',
+    (bot, message) => {
+      bot.reply(message, {
+        attachments: [
+          
+          ]
+      })
+    })
 
   controller.hears(
     /links count( (user <@(.*)>|(channel)( <#(.*)\|.*>)?))?/,
