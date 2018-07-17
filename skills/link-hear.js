@@ -14,13 +14,15 @@ module.exports = controller => {
         const link = '<' + mReg[0] + '>'
         const userId = message.user
         const channelId = message.channel
-        const createdAt = new Date()
+        const ts = message.ts
+        const team = message.team
         const linkInfo = {
           userId,
           channelId,
           id,
           link,
-          createdAt
+          ts,
+          team
         }
         controller.storage.links.get(id)
           .then(link => {
