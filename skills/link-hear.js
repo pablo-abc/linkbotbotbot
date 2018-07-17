@@ -89,4 +89,3 @@ module.exports = controller => {
     bot.reply(message, `I don't understand that command, <@${message.user}>.\nTry to stop being stupid.`);
   });
 }
-answer = ` in this channel`;
