@@ -3,9 +3,6 @@ module.exports = controller => {
     /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>( *\[[a-z][a-z0-9]*\])*)/ig,
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
-      bot.api.conversations.history({channel: message.channel}, (err, result) => {
-        if (err) console.log(err)
-      })
       for (const m of message.match) {
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         const tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
