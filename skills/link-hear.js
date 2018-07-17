@@ -103,7 +103,19 @@ module.exports = controller => {
     (bot, message) => {
       bot.reply(message, {
         attachments: [
-          
+          {
+            title: 'Your links on this channel:',
+            callback_id: `delete_${message.user}`,
+            attachment_type: 'default',
+            actions: [
+              {
+                name: 'Link',
+                text: 'Delete',
+                value: 'Delete',
+                type: 'button'
+              }
+              ]
+          }
           ]
       })
     })
