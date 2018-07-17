@@ -5,7 +5,7 @@ module.exports = controller => {
     (bot, message) => {
       for (const m of message.match) {
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
-        const tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
+        const tags = m.match(/\[[a-z][a-z0-9]*\]/ig).map(tag => tag.toLowerCase())
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0].toLowerCase() + '>'
         const userId = message.user
@@ -66,12 +66,12 @@ module.exports = controller => {
         }
       }
       if (message.match[12]) {
-        tags = message.match[14].split(',').map(tag => tag.toString().trim())
+        tags = message.match[14].split(',').map(tag => tag.toString().trim().toLowerCase())
+        tags = tags.map(tag => {
+          return {tags: '[' + tag + ']'}
+        })
         if (message.match[16]) {
-          tags = tags.concat(message.match[18])
-          tags = tags.map(tag => {
-            return {tags: '[' + tag + ']'}
-          })
+          tags = tags.concat({tags: '[' + message.match[18].toLowerCase() + ']'})
           switch (message.match[17].toLowerCase()) {
             case 'and':
               options.$and = tags
@@ -79,11 +79,8 @@ module.exports = controller => {
             case 'or':
               options.$or = tags
               break
-          } else {
-            options.$and = tags
           }
-        }
-        console.log(options)
+        } else options.$and = tags
       }
       controller.storage.links.find(options)
         .then(links => {
