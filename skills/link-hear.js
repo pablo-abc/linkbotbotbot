@@ -21,7 +21,8 @@ module.exports = controller => {
           id,
           link,
           ts,
-          team
+          team,
+          tags
         }
         controller.storage.links.get(id)
           .then(link => {
@@ -66,6 +67,9 @@ module.exports = controller => {
           bot.reply(message, parsedLinks)
         })
     })
+  
+  controller.hears(
+    /links show( (user <@(.*)>|(channel)( <#(.*)\
 
   controller.hears(
     /links count( (user <@(.*)>|(channel)( <#(.*)\|.*>)?))?/,
