@@ -33,12 +33,13 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?( about ([a-z][a-z0-9]*(, [a-z][a-z0-9]*)*( (and|or) [a-z][a-z0-9]*)?))?/i,
+    /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?( about (([a-z][a-z0-9]*(, [a-z][a-z0-9]*)*)( (and|or) ([a-z][a-z0-9]*))?))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       let options = {}
       let answer = ``
       let limit = null
+      let tags = []
       if (message.match[3]) {
         options.userId = message.match[3]
         answer += ` by <@${message.match[3]}>`
@@ -63,6 +64,10 @@ module.exports = controller => {
             limit = new Date().getTime()/1000 - 2592000
             break
         }
+      }
+      if (message.match[12]) {
+        tags = message.match[14].split(',').map(tag => tag.toString().trim())
+        bot.reply(message, `The tags are ${tags}`)
       }
       controller.storage.links.find(options)
         .then(links => {
