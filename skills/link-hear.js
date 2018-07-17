@@ -12,6 +12,7 @@ module.exports = controller => {
         const channelId = message.channel
         const ts = message.ts
         const team = message.team
+        const created = message.event_time
         const linkInfo = {
           userId,
           channelId,
@@ -19,7 +20,8 @@ module.exports = controller => {
           link,
           ts,
           team,
-          tags
+          tags,
+          created
         }
         controller.storage.links.get(id)
           .then(link => {
