@@ -31,47 +31,11 @@ module.exports = controller => {
           })
       }
     })
-
-  controller.hears(
-    /links channel( <#(.*)\|.*>)?/i,
-    'direct_message,direct_mention,mention',
-    (bot, message) => {
-      let channel = message.channel
-      const matchedChannel = message.match[2]
-      if (matchedChannel) channel = matchedChannel
-      controller.storage.links.find({channelId: channel})
-        .then(links => {
-          if (links.length === 0) { return bot.reply(message, `No links found in <#${channel}>`) }
-          const parsedLinks = links.reduce((result, link) => {
-            const line = `Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>`
-            return `${result}${line}\n`
-          }, ``)
-          bot.reply(message, parsedLinks)
-        })
-    })
-
-  controller.hears(
-    /links user( <@(.*)>)?/i,
-    'direct_message,direct_mention,mention',
-    (bot, message) => {
-      let user = message.user
-      if (message.match[2]) user = message.match[2]
-      controller.storage.links.find({userId: user})
-        .then(links => {
-          if (links.length === 0) { return bot.reply(message, `No links found by <@${user}>`) }
-          const parsedLinks = links.reduce((result, link) => {
-            const line = `Link ${link.link}. Added by <@${user}> on <#${link.channelId}>`
-            return `${result}${line}\n`
-          }, ``)
-          bot.reply(message, parsedLinks)
-        })
-    })
   
   controller.hears(
     /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
-      console.log(message.match)
       let options = {}
       let answer = ``
       let limit = null
@@ -88,7 +52,7 @@ module.exports = controller => {
         answer += ` on this channel`
       }
       if (message.match[11]) {
-        switch (message.match[11]) {
+        switch (message.match[11].toLowerCase()) {
           case 'day':
             limit = new Date().getTime()/1000 - 86400
             break
@@ -99,6 +63,7 @@ module.exports = controller => {
             limit = new Date().getTime()/1000 - 2592000
             break
         }
+        bot.reply(message, limit)
       }
       controller.storage.links.find(options)
         .then(links => {
