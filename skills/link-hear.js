@@ -3,12 +3,13 @@ module.exports = controller => {
     /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>)/g,
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
+      bot.api.conversations.history({channel: message.channel}, (err, result) => {
+        if (err) console.log(err)
+        console.log(result)
+        console.log(message)
+      })
       for (const m of message.match) {
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
-        bot.api.channels.history({}, (err, result) => {
-          if (err) console.log(err)
-          console.log(result)
-        })
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0] + '>'
         const userId = message.user
