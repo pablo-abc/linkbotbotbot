@@ -79,9 +79,11 @@ module.exports = controller => {
             case 'or':
               options.$or = tags
               break
+          } else {
+            options.$and = tags
           }
         }
-        console.l
+        console.log(options)
       }
       controller.storage.links.find(options)
         .then(links => {
