@@ -69,7 +69,7 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links show (user <@(.*)>|(channel)( <#(.*)\|.*>)?)/,
+    /links (shared by user <@(.*)>|from (channel)( <#(.*)\|.*>)?)?( (from)?)?/,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       let options = {}
@@ -89,7 +89,8 @@ module.exports = controller => {
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
           const parsedLinks = links.reduce((result, link) => {
-            const tags = link.tags ? link.tags : 'No tags for this link'
+            let tags = link.tags ? link.tags : 'No tags for this link'
+            tags = tags.toString().replace(/,/g, ', ')
             const line = `┌Link ${link.link}. Added by <@${link.userId}> on <#${link.channelId}>\n└───Tags: ${tags}`
             return `${result}${line}\n`
           }, ``)
