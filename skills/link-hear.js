@@ -78,12 +78,19 @@ module.exports = controller => {
       let answer = ``
       let limit = null
       let tags = []
+      let channel = message.channel
       if (message.match[3]) {
-        options.userId = message.match[3]
-        answer += ` by <@${message.match[3]}>`
+        if (message.match[4]) {
+          options.userId = message.match[3]
+          answer += ` by <@${message.match[3]}>`
+        } else {
+          options.userId = message.user
+          answer += ` by you`
+        }
       }
       if (message.match[10]) {
         options.channelId = message.match[10]
+        channel = message.match[10]
         answer += ` on <#${message.match[10]}>`
       }
       if (message.match[7] || !message.match[7]) {
@@ -91,7 +98,7 @@ module.exports = controller => {
         answer += ` on this channel`
       }
       if (message.match[13]) {
-        switch (message.match[12].toLowerCase()) {
+        switch (message.match[13].toLowerCase()) {
           case 'day':
             limit = new Date().getTime()/1000 - 86400
             break
@@ -103,14 +110,14 @@ module.exports = controller => {
             break
         }
       }
-      if (message.match[13]) {
-        tags = message.match[15].split(',').map(tag => tag.toString().trim().toLowerCase())
+      if (message.match[14]) {
+        tags = message.match[16].split(',').map(tag => tag.toString().trim().toLowerCase())
         tags = tags.map(tag => {
           return {tags: '[' + tag + ']'}
         })
-        if (message.match[17]) {
-          tags = tags.concat({tags: '[' + message.match[19].toLowerCase() + ']'})
-          switch (message.match[18].toLowerCase()) {
+        if (message.match[18]) {
+          tags = tags.concat({tags: '[' + message.match[20].toLowerCase() + ']'})
+          switch (message.match[19].toLowerCase()) {
             case 'and':
               options.$and = tags
               break
@@ -123,12 +130,15 @@ module.exports = controller => {
       controller.storage.links.find(options)
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
+          bot.api.conversations.history(channel, (err, response) => {
+            console.log(response)
+          })
           const parsedLinks = links.reduce((result, link) => {
             if (limit && link.created < limit)
               return result
             let tags = link.tags ? link.tags : 'No tags for this link'
             tags = tags.toString().replace(/,/g, ', ')
-            const line = `┌Link ${link.link}. Added${answer}\n└───Tags: \`${tags}\`. Date: \`${new Date(link.created * 1000)}\``
+            const line = `┌Link ${link.link}. Added${answer}\n└───Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_`
             return `${result}${line}\n`
           }, ``)
           bot.reply(message, parsedLinks)
