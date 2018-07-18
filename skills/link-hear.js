@@ -98,7 +98,7 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links delete/i,
+    /links delete (.*)/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       bot.reply(message, {
@@ -109,10 +109,17 @@ module.exports = controller => {
             attachment_type: 'default',
             actions: [
               {
-                name: 'Link',
+                name: 'link_delete',
                 text: 'Delete',
-                value: 'Delete',
-                type: 'button'
+                value: 'delete',
+                style: 'danger',
+                type: 'button',
+                confirm: {
+                  title: 'Are you sure?',
+                  text: 'This action is permanent',
+                  ok_text: 'I am sure',
+                  dismiss_text: 'I am unsure'
+                }
               }
               ]
           }
