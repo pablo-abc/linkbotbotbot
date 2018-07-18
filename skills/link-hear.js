@@ -1,11 +1,11 @@
 module.exports = controller => {
   const parseLinks = (bot, message, limit, links, answer)=> {
             const parsedLinks = links.reduce((result, link) => {
-              if (limit && link.created < limit)
+              if (limit && link.createdAt < limit)
                 return result
               let tags = link.tags ? link.tags : 'No tags for this link'
               tags = tags.toString().replace(/,/g, ', ')
-              const line = `┌ Link ${link.link}. Added${answer}\n >─── Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_\n└─── ${link.thumbsup}:+1:`
+              const line = `┌ Link ${link.link}. Added${answer}\n >─── Tags: \`${tags}\`. Date: _${new Date(link.createdAt * 1000)}_\n└─── ${link.thumbsup}:+1:`
               return `${result}${line}\n`
             }, ``)
             bot.reply(message, parsedLinks)
@@ -62,7 +62,7 @@ module.exports = controller => {
         const channelId = message.channel
         const ts = message.ts
         const team = message.team
-        const created = message.event_time
+        const createdAt = message.event_time
         const linkInfo = {
           userId,
           channelId,
@@ -72,7 +72,8 @@ module.exports = controller => {
           thumbsup: 0,
           team,
           tags,
-          created
+          createdAt,
+          updatedAt: createdAt
         }
         controller.storage.links.get(id)
           .then(link => {
