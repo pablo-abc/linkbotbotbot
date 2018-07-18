@@ -5,8 +5,9 @@ module.exports = function(controller) {
         bot.reply(message, 'Welcome, <@' + message.user + '>');
 
     });
-  
-    controller.on('reaction_added', function(bot, event){
-      console.log('asd')
+    
+    controller.on('reaction_added', (bot, event) => {
+      console.log(event)
+      
     });
 }
