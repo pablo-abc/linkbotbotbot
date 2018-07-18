@@ -5,9 +5,9 @@ module.exports = function(controller) {
     controller.middleware.receive.use(function(bot, message, next) {
       if (message.type == 'interactive_message_callback') {
         if (message.actions[0].name.match(/^delete$/)){
-          controller.storage.links.get(message.actions[0].value, (err, resp) => {
-            console.log(err)
-            bot.reply(message, 'The link has been deleted')
+          controller.storage.links.delete({id: message.actions[0].value}, (err, resp) => {
+            if (err) console.log(err)
+            else bot.reply(message, 'The link has been deleted')
           })
         }
         
