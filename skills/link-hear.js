@@ -57,6 +57,7 @@ module.exports = controller => {
           id,
           link,
           ts,
+          thumpsup: 0,
           team,
           tags,
           created
@@ -131,9 +132,15 @@ module.exports = controller => {
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
           bot.api.conversations.history({channel}, (err, response) => {
-            console.log(response)
             response.messages.map(resp => {
-              if (resp.reactions) console.log(resp.reactions)
+              if (resp.reactions) {
+                console.log(resp)
+                const tCount = resp.reactions.reduce((total, reaction) => {
+                  if (reaction.name.includes('thumbsup') || reaction.name.includes('+1'))
+                    return total + reaction.count
+                }, 0)
+                return {.
+              }
             })
             if (err) console.log(err)
           })
