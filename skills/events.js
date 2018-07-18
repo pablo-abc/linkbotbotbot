@@ -6,5 +6,7 @@ module.exports = function(controller) {
 
     });
   
-    controller.on('reaction_added')
+    controller.on('reaction_added', function(bot, event){
+      console.log('asd')
+    });
 }
