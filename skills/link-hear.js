@@ -1,11 +1,19 @@
 module.exports = controller => {
   controller.hears(
+    /delete <https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>/i,
+    'direct_message,mention,direct_mention',
+    (bot, message) => {
+      
+    })
+  
+  controller.hears(
     /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>( *\[[a-z][a-z0-9]*\])*)/ig,
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
       for (const m of message.match) {
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
-        const tags = m.match(/\[[a-z][a-z0-9]*\]/ig).map(tag => tag.toLowerCase())
+        let tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
+        if (tags) tags = tags.map(tag => tag.toLowerCase())
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0].toLowerCase() + '>'
         const userId = message.user
@@ -95,36 +103,6 @@ module.exports = controller => {
           }, ``)
           bot.reply(message, parsedLinks)
         })
-    })
-  
-  controller.hears(
-    /links delete (.*)/i,
-    'direct_message,direct_mention,mention',
-    (bot, message) => {
-      bot.reply(message, {
-        attachments: [
-          {
-            title: 'Your links on this channel:',
-            callback_id: `delete_${message.user}`,
-            attachment_type: 'default',
-            actions: [
-              {
-                name: 'link_delete',
-                text: 'Delete',
-                value: 'delete',
-                style: 'danger',
-                type: 'button',
-                confirm: {
-                  title: 'Are you sure?',
-                  text: 'This action is permanent',
-                  ok_text: 'I am sure',
-                  dismiss_text: 'I am unsure'
-                }
-              }
-              ]
-          }
-          ]
-      })
     })
 
   controller.hears(
