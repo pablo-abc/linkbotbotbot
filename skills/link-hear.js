@@ -1,7 +1,7 @@
 module.exports = controller => {
   const parseLinks = (bot, message, limit, links, answer) => (err, response) => {
-                if (err) return bot.reply(message, 'Something went wrong')
-            
+                console.log(err)
+            if (err) return bot.reply(message, 'Something went wrong')
             const mWithThumbsup = response.messages.reduce((resultArray, resp) => {
               if (resp.reactions) {
                 const tCount = resp.reactions.reduce((total, reaction) => {
