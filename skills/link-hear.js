@@ -74,7 +74,7 @@ module.exports = controller => {
           tags,
           created
         }
-        controller.storage.links.get(id)
+        controller.storage.links.get({id})
           .then(link => {
             if (!link) {
               return controller.storage.links.save(linkInfo)
