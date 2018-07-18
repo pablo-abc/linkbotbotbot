@@ -20,18 +20,47 @@ linkbotbotbot hears and stores by default all the links in the channel he's invi
 You can add tags after a link in order to be able to search for links with them.
 To add tags you can use the following syntax:
 
-> [www.reallycoolpage.com](https://xkcd.com/) [tag1] [tag2] [tag3]
+> [www.xkcd.com](https://xkcd.com/) [tag1] [tag2] [tag3]
 
-Spaces between tags are optional.
+Spaces between tags are optional but tags must always go next to each other, after the link.
 
 #### Query by user
 
 You can search links shared by a specific user using the following syntax:
 
-> links shared by [@reallycooluser](https://xkcd.com/327/)
+> links shared by [@bobbytables](https://xkcd.com/327/)
 
 #### Query by channel
 
-You can search links shared in a specific channel usint the following syntax:
+You can search links shared in a specific channel.
 
-> links shared 
+Query on the channel you're in:
+
+> links shared on this channel
+
+Query on a specific channel:
+
+> links shared on [#emacs](https://xkcd.com/378/)
+
+#### Query by timeframe
+
+You can search links shared the past day, week or month by using the following syntax:
+
+> links shared this day
+
+#### Query by tags
+
+You can search by looking for a specific tag or tags like this:
+
+And syntax:
+> links shared about tag1, tag2 and tag3
+> links shared about tag1, tag2, tag3
+
+Or syntax:
+> links shared about tag1, tag2, tag3
+
+#### Combining queries
+
+You can combine the queries before as you like as long as they follow the same order we presented them as:
+
+> links shared by [@bobbytables](https://xkcd/327/) on [#emacs](https://xkcd/378/) this week about hacking and noodles
