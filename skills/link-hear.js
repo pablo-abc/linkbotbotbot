@@ -12,17 +12,18 @@ module.exports = controller => {
               }
               return resultArray
             }, [])
-            console.log(mWithThumbsup)
             const parsedLinks = links.reduce((result, link) => {
-              let thumbsups = 0
               for (let mwt of mWithThumbsup) {
-                if (mwt.ts === link.ts) thumbsups = mwt.count
+                if (mwt.ts === link.ts) {
+                  link.thumbsup = mwt.count
+                  controller.storage.links.save(link, err => err ? console.log(err) : null)
+                }
               }
               if (limit && link.created < limit)
                 return result
               let tags = link.tags ? link.tags : 'No tags for this link'
               tags = tags.toString().replace(/,/g, ', ')
-              const line = `┌Link ${link.link}. Added${answer}\n└───Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_\n└───${thumbsups}:+1:`
+              const line = `┌ Link ${link.link}. Added${answer}\n >─── Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_\n└─── ${link.thumbsup}:+1:`
               return `${result}${line}\n`
             }, ``)
             bot.reply(message, parsedLinks)
@@ -85,7 +86,7 @@ module.exports = controller => {
           id,
           link,
           ts,
-          thumpsup: 0,
+          thumbsup: 0,
           team,
           tags,
           created
