@@ -94,8 +94,8 @@ module.exports = controller => {
       let channel = message.channel
       if (message.match[3]) {
         if (message.match[4]) {
-          options.userId = message.match[3]
-          answer += ` by <@${message.match[3]}>`
+          options.userId = message.match[4]
+          answer += ` by <@${message.match[4]}>`
         } else {
           options.userId = message.user
           answer += ` by you`
