@@ -1,9 +1,33 @@
 module.exports = controller => {
   controller.hears(
-    /delete <https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>/i,
+    /delete (<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>)/i,
     'direct_message,mention,direct_mention',
     (bot, message) => {
-      
+      const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(message.match[1])
+      controller.storage.links.find({userId: message.user, link: '<' + mReg[0] + '>'})
+      .then(links => {
+        if (links.length === 0)
+          return bot.reply(message, 'You have not stored this link in me')
+      })
+      bot.reply(message, {
+        attachments: [
+          {
+            title: 'Do you want to delete this link?',
+            text: message.match[1],
+            callback_id: `delete_link`,
+            attachment_type: 'default',
+            actions: [
+              {
+                name: 'delete',
+                text: 'Delete',
+                value: message.match[1],
+                type: 'button',
+                style: 'danger'
+              }
+              ]
+          }
+          ]
+      })
     })
   
   controller.hears(
@@ -11,10 +35,10 @@ module.exports = controller => {
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
       for (const m of message.match) {
-        const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         let tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
         if (tags) tags = tags.map(tag => tag.toLowerCase())
         const id = message.channel + message.user + mReg[0]
+        const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         const link = '<' + mReg[0].toLowerCase() + '>'
         const userId = message.user
         const channelId = message.channel
