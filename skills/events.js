@@ -6,4 +6,5 @@ module.exports = function(controller) {
 
     });
   
+    controller.on('reaction_added')
 }
