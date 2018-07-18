@@ -4,29 +4,35 @@ module.exports = controller => {
     'direct_message,mention,direct_mention',
     (bot, message) => {
       const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(message.match[1])
-      controller.storage.links.find({userId: message.user, link: '<' + mReg[0] + '>'})
+      controller.storage.links.find({userId: message.user, link: '<' + mReg[0].toLowerCase() + '>', channelId: message.channel})
       .then(links => {
         if (links.length === 0)
-          return bot.reply(message, 'You have not stored this link in me')
-      })
-      bot.reply(message, {
-        attachments: [
-          {
-            title: 'Do you want to delete this link?',
-            text: message.match[1],
-            callback_id: `delete_link`,
-            attachment_type: 'default',
-            actions: [
-              {
-                name: 'delete',
-                text: 'Delete',
-                value: message.match[1],
-                type: 'button',
-                style: 'danger'
-              }
-              ]
-          }
-          ]
+          return bot.reply(message, 'You have not stored this link here')
+        bot.reply(message, {
+          attachments: [
+            {
+              title: 'Do you want to delete this link?',
+              text: message.match[1],
+              callback_id: `delete_link`,
+              attachment_type: 'default',
+              actions: [
+                {
+                  name: 'delete',
+                  text: 'Delete',
+                  value: message.match[1],
+                  type: 'button',
+                  style: 'danger',
+                  confirm: {
+                    title: 'Are you sure?',
+                    text: 'This will delete this link permanently from this channel',
+                    ok_text: 'I am sure',
+                    dismiss_text: 'Not sure, actually'
+                  }
+                }
+                ]
+            }
+            ]
+        })
       })
     })
   
