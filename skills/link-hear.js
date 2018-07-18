@@ -71,7 +71,7 @@ module.exports = controller => {
     })
   
   controller.hears(
-    /links shared(( by <@([^>]*)>)?( on ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?( about (([a-z][a-z0-9]*(, [a-z][a-z0-9]*)*)( (and|or) ([a-z][a-z0-9]*))?))?/i,
+    /links shared(( by <@([^>]*)>)?( (on|in) ((this channel)|(<#([^\|>]*)\|.*>)))?)?( (from )?this (week|month|day))?( about (([a-z][a-z0-9]*(, [a-z][a-z0-9]*)*)( (and|or) ([a-z][a-z0-9]*))?))?/i,
     'direct_message,direct_mention,mention',
     (bot, message) => {
       let options = {}
@@ -82,16 +82,16 @@ module.exports = controller => {
         options.userId = message.match[3]
         answer += ` by <@${message.match[3]}>`
       }
-      if (message.match[8]) {
-        options.channelId = message.match[8]
-        answer += ` on <#${message.match[8]}>`
+      if (message.match[9]) {
+        options.channelId = message.match[9]
+        answer += ` on <#${message.match[9]}>`
       }
-      if (message.match[6] || !message.match[5]) {
+      if (message.match[6] || !message.match[6]) {
         options.channelId = message.channel
         answer += ` on this channel`
       }
-      if (message.match[11]) {
-        switch (message.match[11].toLowerCase()) {
+      if (message.match[12]) {
+        switch (message.match[12].toLowerCase()) {
           case 'day':
             limit = new Date().getTime()/1000 - 86400
             break
@@ -103,14 +103,14 @@ module.exports = controller => {
             break
         }
       }
-      if (message.match[12]) {
-        tags = message.match[14].split(',').map(tag => tag.toString().trim().toLowerCase())
+      if (message.match[13]) {
+        tags = message.match[15].split(',').map(tag => tag.toString().trim().toLowerCase())
         tags = tags.map(tag => {
           return {tags: '[' + tag + ']'}
         })
-        if (message.match[16]) {
-          tags = tags.concat({tags: '[' + message.match[18].toLowerCase() + ']'})
-          switch (message.match[17].toLowerCase()) {
+        if (message.match[17]) {
+          tags = tags.concat({tags: '[' + message.match[19].toLowerCase() + ']'})
+          switch (message.match[18].toLowerCase()) {
             case 'and':
               options.$and = tags
               break
