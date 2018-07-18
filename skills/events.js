@@ -23,4 +23,12 @@ module.exports = function (controller) {
         })
       })
   })
+  
+  controller.on('bot_channel_join', (bot, message) => {
+    console.log('It joined')
+  });
+  
+  controller.on('channel_joined', (bot, message) => {
+    console.log('It joined other way')
+  })
 }
