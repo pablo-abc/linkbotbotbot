@@ -132,27 +132,32 @@ module.exports = controller => {
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
           bot.api.conversations.history({channel}, (err, response) => {
-            response.messages.map(resp => {
+            if (err) return bot.reply(message, 'Something went wrong')
+            
+            const mWithThumbsup = response.messages.reduce((resultArray, resp) => {
               if (resp.reactions) {
-                console.log(resp)
                 const tCount = resp.reactions.reduce((total, reaction) => {
                   if (reaction.name.includes('thumbsup') || reaction.name.includes('+1'))
                     return total + reaction.count
                 }, 0)
-                return {.
+                return resultArray.concat({ts: resp.ts, count: tCount})
               }
-            })
-            if (err) console.log(err)
+              return resultArray
+            }, [])
+            console.log(mWithThumbsup)
+            const parsedLinks = links.reduce((result, link) => {
+              for (let mwt of mWithThumbsup) {
+                if (mwt.ts === link.ts)
+              }
+              if (limit && link.created < limit)
+                return result
+              let tags = link.tags ? link.tags : 'No tags for this link'
+              tags = tags.toString().replace(/,/g, ', ')
+              const line = `┌Link ${link.link}. Added${answer}\n├───Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_\n└───:+1::${thumbsups}`
+              return `${result}${line}\n`
+            }, ``)
+            bot.reply(message, parsedLinks)
           })
-          const parsedLinks = links.reduce((result, link) => {
-            if (limit && link.created < limit)
-              return result
-            let tags = link.tags ? link.tags : 'No tags for this link'
-            tags = tags.toString().replace(/,/g, ', ')
-            const line = `┌Link ${link.link}. Added${answer}\n└───Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_`
-            return `${result}${line}\n`
-          }, ``)
-          bot.reply(message, parsedLinks)
         })
     })
 
