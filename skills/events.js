@@ -5,5 +5,6 @@ module.exports = function(controller) {
         bot.reply(message, 'Welcome, <@' + message.user + '>');
 
     });
-
+  
+    controller.on('reaction_added')
 }

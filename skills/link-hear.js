@@ -1,24 +1,6 @@
 module.exports = controller => {
-  const parseLinks = (bot, message, limit, links, answer) => (err, response) => {
-                console.log(err)
-            if (err) return bot.reply(message, 'Something went wrong')
-            const mWithThumbsup = response.messages.reduce((resultArray, resp) => {
-              if (resp.reactions) {
-                const tCount = resp.reactions.reduce((total, reaction) => {
-                  if (reaction.name.includes('thumbsup') || reaction.name.includes('+1'))
-                    return total + reaction.count
-                }, 0)
-                return resultArray.concat({ts: resp.ts, count: tCount})
-              }
-              return resultArray
-            }, [])
+  const parseLinks = (bot, message, limit, links, answer)=> {
             const parsedLinks = links.reduce((result, link) => {
-              for (let mwt of mWithThumbsup) {
-                if (mwt.ts === link.ts) {
-                  link.thumbsup = mwt.count
-                  controller.storage.links.save(link, err => err ? console.log(err) : null)
-                }
-              }
               if (limit && link.created < limit)
                 return result
               let tags = link.tags ? link.tags : 'No tags for this link'
@@ -28,6 +10,7 @@ module.exports = controller => {
             }, ``)
             bot.reply(message, parsedLinks)
   }
+
   controller.hears(
     /delete (<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>)/i,
     'direct_message,mention,direct_mention',
@@ -160,7 +143,7 @@ module.exports = controller => {
       controller.storage.links.find(options)
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
-          bot.api.conversations.history({channel}, parseLinks(bot, message, limit, links, answer))
+          parseLinks(bot, message, limit, links, answer)
         })
     })
 
