@@ -1,4 +1,32 @@
 module.exports = controller => {
+  const parseLinks = (bot, message, limit, links, answer) => (err, response) => {
+                if (err) return bot.reply(message, 'Something went wrong')
+            
+            const mWithThumbsup = response.messages.reduce((resultArray, resp) => {
+              if (resp.reactions) {
+                const tCount = resp.reactions.reduce((total, reaction) => {
+                  if (reaction.name.includes('thumbsup') || reaction.name.includes('+1'))
+                    return total + reaction.count
+                }, 0)
+                return resultArray.concat({ts: resp.ts, count: tCount})
+              }
+              return resultArray
+            }, [])
+            console.log(mWithThumbsup)
+            const parsedLinks = links.reduce((result, link) => {
+              let thumbsups = 0
+              for (let mwt of mWithThumbsup) {
+                if (mwt.ts === link.ts) thumbsups = mwt.count
+              }
+              if (limit && link.created < limit)
+                return result
+              let tags = link.tags ? link.tags : 'No tags for this link'
+              tags = tags.toString().replace(/,/g, ', ')
+              const line = `┌Link ${link.link}. Added${answer}\n└───Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_\n└───${thumbsups}:+1:`
+              return `${result}${line}\n`
+            }, ``)
+            bot.reply(message, parsedLinks)
+  }
   controller.hears(
     /delete (<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>)/i,
     'direct_message,mention,direct_mention',
@@ -131,33 +159,7 @@ module.exports = controller => {
       controller.storage.links.find(options)
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
-          bot.api.conversations.history({channel}, (err, response) => {
-            if (err) return bot.reply(message, 'Something went wrong')
-            
-            const mWithThumbsup = response.messages.reduce((resultArray, resp) => {
-              if (resp.reactions) {
-                const tCount = resp.reactions.reduce((total, reaction) => {
-                  if (reaction.name.includes('thumbsup') || reaction.name.includes('+1'))
-                    return total + reaction.count
-                }, 0)
-                return resultArray.concat({ts: resp.ts, count: tCount})
-              }
-              return resultArray
-            }, [])
-            console.log(mWithThumbsup)
-            const parsedLinks = links.reduce((result, link) => {
-              for (let mwt of mWithThumbsup) {
-                if (mwt.ts === link.ts)
-              }
-              if (limit && link.created < limit)
-                return result
-              let tags = link.tags ? link.tags : 'No tags for this link'
-              tags = tags.toString().replace(/,/g, ', ')
-              const line = `┌Link ${link.link}. Added${answer}\n├───Tags: \`${tags}\`. Date: _${new Date(link.created * 1000)}_\n└───:+1::${thumbsups}`
-              return `${result}${line}\n`
-            }, ``)
-            bot.reply(message, parsedLinks)
-          })
+          bot.api.conversations.history({channel}, parseLinks(bot, message, limit, links, answer))
         })
     })
 
