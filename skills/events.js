@@ -13,11 +13,13 @@ module.exports = function(controller) {
       .then(links => {
           if (links.length === 0)
             return
-          bot.api.reactions.get({timestamp: links[0].ts, channel: links[0].channelId}, (err, response) => {
-            if (!response.reactions) {
-              links[0].thumbsup = 0
-              return controller.storage
-            }
+          links.map(link => {
+            bot.api.reactions.get({timestamp: links[0].ts, channel: links[0].channelId}, (err, response) => {
+              if (!response.reactions) {
+                link.thumpsup = 0
+              }
+              
+            })
           })
         })
     });
