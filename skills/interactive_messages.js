@@ -4,6 +4,9 @@ module.exports = function(controller) {
     // if the button action is 'say', act as if user said that thing
     controller.middleware.receive.use(function(bot, message, next) {
       if (message.type == 'interactive_message_callback') {
+        if (message.actions[0].name.match(/^delete$/)){
+          controller.storage.links.delete(message.actions[0].value, ()
+        }
         if (message.actions[0].name.match(/^say$/)) {
             var reply = message.original_message;
 

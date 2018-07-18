@@ -19,7 +19,7 @@ module.exports = controller => {
                 {
                   name: 'delete',
                   text: 'Delete',
-                  value: message.match[1],
+                  value: message.channel + message.user + mReg[0],
                   type: 'button',
                   style: 'danger',
                   confirm: {
