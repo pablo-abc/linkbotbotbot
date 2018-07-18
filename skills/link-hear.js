@@ -41,8 +41,10 @@ module.exports = controller => {
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
       for (const m of message.match) {
+        console.log(m)
         let tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
         if (tags) tags = tags.map(tag => tag.toLowerCase())
+        console.log(tags)
         const id = message.channel + message.user + mReg[0]
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         const link = '<' + mReg[0].toLowerCase() + '>'
