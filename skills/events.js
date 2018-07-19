@@ -24,6 +24,14 @@ module.exports = function (controller) {
       })
   })
   
+  controller.on('team_join', (bot, event) => {
+    controller.storage.SlackUser.save({
+      username: event.user.name,
+      teamId: event.user.team_id,
+      
+    });
+  });
+  
   controller.on('bot_channel_join', (bot, message) => {
     console.log('It joined')
   });
