@@ -25,10 +25,10 @@ module.exports = function (controller) {
   })
   
   controller.on('team_join', (bot, event) => {
-    controller.storage.SlackUser.save({
+    controller.storage.SlackUser.insert({
       username: event.user.name,
       teamId: event.user.team_id,
-      
+      slackId: event.user.id
     });
   });
   
