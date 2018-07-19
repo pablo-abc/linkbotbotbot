@@ -50,6 +50,11 @@ module.exports = controller => {
     /(<https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))(\|\2)?>( *\[[a-z][a-z0-9]*\])*)/ig,
     'direct_message,mention,direct_mention,ambient',
     (bot, message) => {
+      console.log('hello')
+      bot.api.auth.test((err, resp) => {
+        console.log(resp)
+        console.log(err)
+      })
       for (const m of message.match) {
         let tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
         if (tags) tags = tags.map(tag => tag.toLowerCase())
