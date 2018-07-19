@@ -169,7 +169,7 @@ module.exports = controller => {
     bot.reply(message, `I will never stop, <@${message.user}>`)
   })
 
-  controller.hears('.*', 'direct_mention,mention,direct_message', (bot, message) => {
+  /*controller.hears('.*', 'direct_mention,mention,direct_message', (bot, message) => {
     bot.reply(message, `I don't understand that command, <@${message.user}>.\nTry to stop being stupid.`)
-  })
+  })*/
 }
