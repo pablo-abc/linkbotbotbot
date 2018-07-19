@@ -5,7 +5,7 @@ module.exports = function (controller) {
 
   controller.on('reaction_added,reaction_removed', (bot, event) => {
     if (!event.reaction.includes('+1') && !event.reaction.includes('thumbsup')) { return }
-    controller.storage.links.find({ts: event.item.ts, channel: event.item.channel})
+    controller.storage.Link.find({ts: event.item.ts, channel: event.item.channel})
       .then(links => {
         if (links.length === 0) { return }
         links.map(link => {
@@ -18,7 +18,7 @@ module.exports = function (controller) {
                 : total
             }, 0)
             link.thumbsup = tCount
-            controller.storage.links.save(link)
+            controller.storage.Link.save(link)
           })
         })
       })

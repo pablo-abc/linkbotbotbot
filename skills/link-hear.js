@@ -15,7 +15,7 @@ module.exports = controller => {
     'direct_message,mention,direct_mention',
     (bot, message) => {
       const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(message.match[1])
-      controller.storage.links.find({user: message.user, link: '<' + mReg[0].toLowerCase() + '>', channel: message.channel})
+      controller.storage.Link.find({user: message.user, link: '<' + mReg[0].toLowerCase() + '>', channel: message.channel})
         .then(links => {
           if (links.length === 0) return bot.reply(message, 'You have not stored this link here')
           bot.reply(message, {
@@ -73,10 +73,10 @@ module.exports = controller => {
           createdAt,
           updatedAt: createdAt
         }
-        controller.storage.links.get(id)
+        controller.storage.Link.get(id)
           .then(link => {
             if (!link) {
-              return controller.storage.links.save(linkInfo)
+              return controller.storage.Link.save(linkInfo)
             }
           })
       }
@@ -137,7 +137,7 @@ module.exports = controller => {
           }
         } else options.$and = tags
       }
-      controller.storage.links.find(options)
+      controller.storage.Link.find(options)
         .then(links => {
           if (links.length === 0) { return bot.reply(message, `No links found${answer}`) }
           parseLinks(bot, message, limit, links, answer)
@@ -161,7 +161,7 @@ module.exports = controller => {
         options = {channel: message.channel}
         answer = ` in this channel`
       }
-      controller.storage.links.find(options)
+      controller.storage.Link.find(options)
         .then(links => bot.reply(message, `There are ${links.length} links stored inside me${answer}`))
     })
 
