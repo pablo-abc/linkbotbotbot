@@ -15,9 +15,10 @@ module.exports = controller => {
       axios.post(apiUrl + '/users', params)
       .then(response => {
         //console.log(response)
-        bot.reply(message, 'User created')
+        bot.reply(message, 'User created. Check your email for a verification link.')
       }).catch(err => {
         try {
+          console.log(err)
           const error = err.response.data.error
           if (error.details.messages.email || error.details.messages.username)
             bot.reply(message, 'User or email already exist')
@@ -26,7 +27,9 @@ module.exports = controller => {
         }
       })
   };
-  controller.hears(/register "(.*)"/i, 'direct_message', (bot, message) => {
+
+  controller.hears(/register (.*)/i, 'direct_message,direct_mention', (bot, message) => {
+
     bot.api.users.info({user: message.user}, (err, response) => {
       if (!err)
         registerUser(response, message, bot)
