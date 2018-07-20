@@ -16,11 +16,12 @@ module.exports = controller => {
         else bot.reply(message, 'There was a problem')
       }).catch(err => {
         try {
-        const error = err.response.data.error
-        if (error.details.messages.email || error.details.messages.username)
-        console.log(err.response.data.error)
-        } catch() {
+          const error = err.response.data.error
+          if (error.details.messages.email || error.details.messages.username)
+            bot.reply(message, 'User or email already exist')
+        } catch(err) {
           bot.reply(message, 'There was a problem')
+        }
       })
     })
   })
