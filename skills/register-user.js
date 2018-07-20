@@ -2,8 +2,7 @@ const axios = require('axios')
 const apiUrl = process.env.LINK_API_URL
 
 module.exports = controller => {
-  controller.hears(/register "(.*)"/i, 'direct_message', (bot, message) => {
-    bot.api.users.info({user: message.user}, (err, response) => {
+  const registerUser = (response, message, bot) => {
       const params = {
         username: response.user.name,
         password: message.match[1],
@@ -24,6 +23,11 @@ module.exports = controller => {
           bot.reply(message, 'There was a problem')
         }
       })
+  };
+  controller.hears(/register "(.*)"/i, 'direct_message', (bot, message) => {
+    bot.api.users.info({user: message.user}, (err, response) => {
+      if (!err)
+        registerUser(response, message, bot)
     })
   })
 }
