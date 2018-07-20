@@ -13,9 +13,7 @@ module.exports = controller => {
       };
       axios.post(apiUrl + '/users', params)
       .then(response => {
-        if (response.statusCode === 200)
-          bot.reply(message, 'User created')
-        else bot.reply(message, 'There was a problem')
+        bot.reply(message, 'User created')
       }).catch(err => {
         console.log(err)
         try {
