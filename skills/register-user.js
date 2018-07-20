@@ -1,5 +1,7 @@
 const axios = require('axios')
 const apiUrl = process.env.LINK_API_URL
+const token = process.env.BOT_TOKEN
+axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
 module.exports = controller => {
   const registerUser = (response, message, bot) => {
@@ -12,14 +14,14 @@ module.exports = controller => {
       };
       axios.post(apiUrl + '/users', params)
       .then(response => {
+        //console.log(response)
         bot.reply(message, 'User created')
       }).catch(err => {
-        console.log(err)
         try {
           const error = err.response.data.error
           if (error.details.messages.email || error.details.messages.username)
             bot.reply(message, 'User or email already exist')
-        } catch(erra) {
+        } catch(error) {
           bot.reply(message, 'There was a problem')
         }
       })
