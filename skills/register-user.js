@@ -29,7 +29,6 @@ module.exports = controller => {
   };
 
   controller.hears(/register (.*)/i, 'direct_message,direct_mention', (bot, message) => {
-
     bot.api.users.info({user: message.user}, (err, response) => {
       if (!err)
         registerUser(response, message, bot)

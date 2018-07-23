@@ -53,6 +53,7 @@ module.exports = controller => {
       for (const m of message.match) {
         let tags = m.match(/\[[a-z][a-z0-9]*\]/ig)
         if (tags) tags = tags.map(tag => tag.toLowerCase())
+        else tags = []
         const mReg = /https?:\/\/((www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*))/.exec(m)
         const id = message.channel + message.user + mReg[0]
         const link = '<' + mReg[0].toLowerCase() + '>'
@@ -168,8 +169,4 @@ module.exports = controller => {
   controller.hears(/stop/i, 'direct_mention,mention,direct_message', (bot, message) => {
     bot.reply(message, `I will never stop, <@${message.user}>`)
   })
-
-  /*controller.hears('.*', 'direct_mention,mention,direct_message', (bot, message) => {
-    bot.reply(message, `I don't understand that command, <@${message.user}>.\nTry to stop being stupid.`)
-  })*/
 }
